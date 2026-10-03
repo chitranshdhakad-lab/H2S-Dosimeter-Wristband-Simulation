@@ -109,7 +109,38 @@ export default function App() {
   };
 
   const handleDownloadReport = (worker) => {
-    alert(`Downloading formal OSHA compliance exposure report for ${worker.name} (${worker.id})...`);
+    const reportText = `=====================================================
+H2S DOSIMETER WRISTBAND - WORKER DOSIMETRY DOSSIER
+=====================================================
+Worker ID:          ${worker.id}
+Worker Name:        ${worker.name}
+Assigned Shift:     ${worker.shift}
+Date & Time:        ${worker.dateTime}
+Department/Unit:    ${worker.department}
+Wristband Serial:   ${worker.wristbandSerial}
+Badge Validity:     ${worker.badgeStatus}
+
+DOSIMETRY MEASUREMENTS (SIMULATED):
+-----------------------------------------------------
+Estimated Dose:     ${worker.estimatedDose} ppm·hr
+Confidence Band:    ${worker.confidence}%
+Raw Color Value:    ${worker.rawColor}
+Corrected Color:    ${worker.correctedColor}
+Occupational Risk:  ${worker.status}
+Field Notes:        ${worker.notes || 'Nominal shift logging.'}
+
+AUDIT DISCLAIMER:
+-----------------------------------------------------
+Prototype simulation data — laboratory validation required
+before operational use. In-silico kinetic model v2.4.1.
+=====================================================`;
+    const blob = new Blob([reportText], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `H2S_Dosimetry_${worker.id}_${worker.name.replace(/\s+/g, '_')}.txt`;
+    link.click();
+    URL.revokeObjectURL(url);
   };
 
   const handleBadgeSelectedFromScanner = (badge) => {
@@ -297,11 +328,18 @@ export default function App() {
             />
           )}
 
-          {activeView === 'analytics' && <AnalyticsView />}
+          {activeView === 'analytics' && (
+            <AnalyticsView
+              concentration={concentration}
+              exposureTime={exposureTime}
+              estimatedDose={simState.estimatedDose}
+              isSimulating={isSimulating}
+            />
+          )}
 
-          {activeView === 'reports' && <ReportsView records={records} />}
-
-          {activeView === 'exposure_report' && <ExposureReportView records={records} />}
+          {(activeView === 'reports' || activeView === 'exposure_report') && (
+            <ExposureReportView records={records} />
+          )}
 
           {activeView === 'validation' && <PrototypeValidationView />}
 

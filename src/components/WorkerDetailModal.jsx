@@ -1,7 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { X, CheckCircle2, AlertTriangle, ShieldCheck, Download, User } from 'lucide-react';
 
 export default function WorkerDetailModal({ worker, onClose, onDownload }) {
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === 'Escape' && onClose) {
+        onClose();
+      }
+    }
+    if (worker) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [worker, onClose]);
+
   if (!worker) return null;
 
   return (

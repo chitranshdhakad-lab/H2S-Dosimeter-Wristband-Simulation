@@ -1,7 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { X, ShieldCheck, CheckCircle2, AlertOctagon, RotateCcw } from 'lucide-react';
 
 export default function ShiftCheckModal({ isOpen, onClose, isExpired, onToggleExpiry }) {
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === 'Escape' && onClose) {
+        onClose();
+      }
+    }
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (

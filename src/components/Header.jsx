@@ -1,10 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ShieldCheck, FlaskConical, Bell, User, ChevronDown, CheckCircle2, AlertTriangle, X } from 'lucide-react';
 import { NOTIFICATIONS } from '../data/mockData.js';
 
 export default function Header({ onResetSimulation }) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showAdminMenu, setShowAdminMenu] = useState(false);
+  const headerActionsRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (headerActionsRef.current && !headerActionsRef.current.contains(event.target)) {
+        setShowNotifications(false);
+        setShowAdminMenu(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <header className="app-header">
@@ -37,12 +51,15 @@ export default function Header({ onResetSimulation }) {
         </div>
 
         {/* Action Controls */}
-        <div className="header-actions">
+        <div className="header-actions" ref={headerActionsRef}>
           {/* Notification Button */}
           <div style={{ position: 'relative' }}>
             <button
               className="header-icon-btn"
-              onClick={() => setShowNotifications(!showNotifications)}
+              onClick={() => {
+                setShowNotifications(!showNotifications);
+                setShowAdminMenu(false);
+              }}
               title="Simulation Alerts & Notifications"
             >
               <Bell size={18} />
@@ -82,7 +99,10 @@ export default function Header({ onResetSimulation }) {
           <div style={{ position: 'relative' }}>
             <button
               className="admin-profile-btn"
-              onClick={() => setShowAdminMenu(!showAdminMenu)}
+              onClick={() => {
+                setShowAdminMenu(!showAdminMenu);
+                setShowNotifications(false);
+              }}
               title="Admin User Session"
             >
               <div className="admin-avatar">

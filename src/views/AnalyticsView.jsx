@@ -1,7 +1,13 @@
 import React from 'react';
 import { BarChart3, TrendingUp, ShieldCheck, AlertTriangle } from 'lucide-react';
+import DoseResponseModule from '../components/DoseResponseModule.jsx';
 
-export default function AnalyticsView() {
+export default function AnalyticsView({
+  concentration = 2.4,
+  exposureTime = 3.7,
+  estimatedDose = 24.8,
+  isSimulating = false
+}) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '20px' }}>
@@ -60,6 +66,14 @@ export default function AnalyticsView() {
           ))}
         </div>
       </div>
+
+      {/* Synchronized Dose Response Curves */}
+      <DoseResponseModule
+        concentration={concentration}
+        exposureTime={exposureTime}
+        estimatedDose={estimatedDose}
+        isSimulating={isSimulating}
+      />
     </div>
   );
 }

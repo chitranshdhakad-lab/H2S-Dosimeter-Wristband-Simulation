@@ -24,9 +24,8 @@ export default function Sidebar({ activeView, setActiveView }) {
     { id: 'scan', label: 'Scan Wristband', icon: Camera },
     { id: 'workers', label: 'Worker Records', icon: Users },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
-    { id: 'reports', label: 'Reports', icon: FileText },
-    { id: 'exposure_report', label: 'Exposure Report', icon: ClipboardList },
-    { id: 'validation', label: 'Validation', icon: Microscope },
+    { id: 'reports', label: 'Exposure Reports', icon: FileText },
+    { id: 'validation', label: 'Validation Matrix', icon: Microscope },
     { id: 'settings', label: 'Settings', icon: Settings }
   ];
 
